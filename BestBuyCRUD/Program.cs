@@ -10,26 +10,40 @@ namespace BestBuyCRUD
 {
     class Program
     {
+        //allows us to grab the connection string information from the appsettings.json file
+        //-----------------------------------------------------------------
         static IConfiguration config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
 
         static string connString = config.GetConnectionString("DefaultConnection");
+        //-----------------------------------------------------------------
+
+        //create our IDbConnection that uses MySql, so Dapper can extend it
         static IDbConnection conn = new MySqlConnection(connString);
 
         static void Main(string[] args)
         {
             ListProducts();
 
+            DeleteProduct();
+
+            ListProducts();
+        }
+
+        //We can use these methods that add user interaction with our Dapper Methods
+        public static void DeleteProduct()
+        {
+            //ProductRepository instance - so we can call our dapper methods
             var prodRepo = new ProductRepository(conn);
 
+            //User interaction
             Console.WriteLine($"Please enter the productID of the product you would like to delete:");
             var productID = Convert.ToInt32(Console.ReadLine());
 
+            //Call the Dapper method
             prodRepo.DeleteProduct(productID);
-
-            ListProducts();
         }
 
         public static void UpdateProductName()
@@ -39,7 +53,7 @@ namespace BestBuyCRUD
             Console.WriteLine($"What is the productID of the product you would like to update?");
             var productID = Convert.ToInt32(Console.ReadLine());
 
-            Console.WriteLine($"What is new name you would like for the product with id {productID}?");
+            Console.WriteLine($"What is the new name you would like for the product with an id of {productID}?");
             var updatedName = Console.ReadLine();
 
             prodRepo.UpdateProductName(productID, updatedName);
