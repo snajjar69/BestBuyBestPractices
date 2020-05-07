@@ -20,8 +20,47 @@ namespace BestBuyCRUD
 
         static void Main(string[] args)
         {
+            ListProducts();
+
+            var prodRepo = new ProductRepository(conn);
+
+            Console.WriteLine($"Please enter the productID of the product you would like to delete:");
+            var productID = Convert.ToInt32(Console.ReadLine());
+
+            prodRepo.DeleteProduct(productID);
+
+            ListProducts();
+        }
+
+        public static void UpdateProductName()
+        {
+            var prodRepo = new ProductRepository(conn);
+
+            Console.WriteLine($"What is the productID of the product you would like to update?");
+            var productID = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine($"What is new name you would like for the product with id {productID}?");
+            var updatedName = Console.ReadLine();
+
+            prodRepo.UpdateProductName(productID, updatedName);
+        }
+
+        public static void CreateAndListProducts()
+        {
             //created instance so we can call methods that hit the database
             var prodRepo = new ProductRepository(conn);
+
+            Console.WriteLine($"What is the new product name?");
+            var prodName = Console.ReadLine();
+
+            Console.WriteLine($"What is the new product's price?");
+            var price = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine($"What is the new product's category id?");
+            var categoryID = Convert.ToInt32(Console.ReadLine());
+
+            prodRepo.CreateProduct(prodName, price, categoryID);
+
 
             //call the GetAllProducts method using that instance and store the result
             //in the products variable
@@ -32,7 +71,18 @@ namespace BestBuyCRUD
             {
                 Console.WriteLine($"{product.ProductID} {product.Name}");
             }
- 
+        }
+
+        public static void ListProducts()
+        {
+            var prodRepo = new ProductRepository(conn);
+            var products = prodRepo.GetAllProducts();
+
+            //print each product from the products collection to the console
+            foreach (var product in products)
+            {
+                Console.WriteLine($"{product.ProductID} {product.Name}");
+            }
         }
 
         public static void ListDepartments()
