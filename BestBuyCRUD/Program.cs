@@ -20,9 +20,18 @@ namespace BestBuyCRUD
 
         static void Main(string[] args)
         {
+            //created instance so we can call methods that hit the database
+            var prodRepo = new ProductRepository(conn);
 
-            ListDepartments();
-            DepartmentUpdate();
+            //call the GetAllProducts method using that instance and store the result
+            //in the products variable
+            var products = prodRepo.GetAllProducts();
+
+            //print each product from the products collection to the console
+            foreach (var product in products)
+            {
+                Console.WriteLine($"{product.ProductID} {product.Name}");
+            }
  
         }
 
